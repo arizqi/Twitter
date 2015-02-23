@@ -1,0 +1,44 @@
+PODS:
+  - AFNetworking (2.5.1):
+    - AFNetworking/NSURLConnection (= 2.5.1)
+    - AFNetworking/NSURLSession (= 2.5.1)
+    - AFNetworking/Reachability (= 2.5.1)
+    - AFNetworking/Security (= 2.5.1)
+    - AFNetworking/Serialization (= 2.5.1)
+    - AFNetworking/UIKit (= 2.5.1)
+  - AFNetworking/NSURLConnection (2.5.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.5.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.5.1)
+  - AFNetworking/Security (2.5.1)
+  - AFNetworking/Serialization (2.5.1)
+  - AFNetworking/UIKit (2.5.1):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - BDBOAuth1Manager (1.5.0):
+    - AFNetworking/NSURLConnection (~> 2.5.0)
+    - AFNetworking/NSURLSession (~> 2.5.0)
+  - MBProgressHUD (0.9)
+  - NSDateMinimalTimeAgo (0.1.0)
+  - SVProgressHUD (1.1.2)
+
+DEPENDENCIES:
+  - AFNetworking
+  - BDBOAuth1Manager
+  - MBProgressHUD
+  - NSDateMinimalTimeAgo (~> 0.1.0)
+  - SVProgressHUD
+
+SPEC CHECKSUMS:
+  AFNetworking: 8bee59492a6ff15d69130efa4d0dc67e0094a52a
+  BDBOAuth1Manager: 274574557077abc873fc5688abe8b991e782749c
+  MBProgressHUD: 2038dbcf3dce73215abed6001657043d53aa79a8
+  NSDateMinimalTimeAgo: 11f443d88edcfc2af23309b2641fd063c3d3a125
+  SVProgressHUD: da7a49e789af645d9279ffbca62318945a832438
+
+COCOAPODS: 0.36.0.beta.2
