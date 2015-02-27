@@ -22,10 +22,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if User.currentUser != nil {
             // Go to the logged in screen
-            println("Current user detected")
-            var vc = storyboard.instantiateViewControllerWithIdentifier("TimeLineNavigationController") as UIViewController
-            window?.rootViewController = vc
+            window = UIWindow(frame: UIScreen.mainScreen().bounds)
+            
+            let containerViewController = ContainerViewController()
+            
+            window!.rootViewController = containerViewController
+            window!.makeKeyAndVisible()
+//            println("Current user detected")
+//            var vc = storyboard.instantiateViewControllerWithIdentifier("TimeLineNavigationController") as UIViewController
+//            window?.rootViewController = vc
         }
+        window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        
+        let containerViewController = ContainerViewController()
+        
+        window!.rootViewController = containerViewController
+        window!.makeKeyAndVisible()
+        
         return true
     }
     

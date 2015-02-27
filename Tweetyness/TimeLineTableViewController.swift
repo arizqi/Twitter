@@ -8,11 +8,21 @@
 
 import UIKit
 
-class TimeLineTableViewController: UITableViewController {
+@objc
+protocol TimeLineTableViewControllerDelegate  {
+    optional func toggleLeftPanel()
+    optional func toggleRightPanel()
+    optional func collapseSidePanels()
+}
+
+class TimeLineTableViewController: UITableViewController, SidePanelViewControllerDelegate, UIGestureRecognizerDelegate {
+    
+    
     
     @IBOutlet weak var navItem: UINavigationItem!
     var statuses: [Status]?
     var refresh: UIRefreshControl!
+    var delegate: TimeLineTableViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -145,6 +155,15 @@ class TimeLineTableViewController: UITableViewController {
     
     func newPressed(){
         self.performSegueWithIdentifier("composeSegue", sender: self)
+    }
+    
+    func menuItemSelected(menuItem: AnyObject) {
+        
+//        imageView.image = animal.image
+//        titleLabel.text = animal.title
+//        creatorLabel.text = animal.creator
+        
+        delegate?.collapseSidePanels?()
     }
     
     
