@@ -41,7 +41,7 @@ Time spent: `11`
 - [X] Hamburger menu
 - [X] Dragging anywhere in the view should reveal the menu.
 - [X] The menu should include links to your profile, the home timeline, and the mentions view. The menu can look similar to the LinkedIn menu below or feel free to take liberty with the UI.
-- [X]Profile page
+- [X] Profile page
 - [X] Contains the user header view
 - [X]Contains a section with the users basic stats: # tweets, # following, # followers
 - [] Optional: Implement the paging view for the user description.
