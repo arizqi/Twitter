@@ -17,8 +17,6 @@ protocol TimeLineTableViewControllerDelegate  {
 
 class TimeLineTableViewController: UITableViewController, SidePanelViewControllerDelegate, UIGestureRecognizerDelegate {
     
-    
-    
     @IBOutlet weak var navItem: UINavigationItem!
     var statuses: [Status]?
     var refresh: UIRefreshControl!
@@ -34,6 +32,9 @@ class TimeLineTableViewController: UITableViewController, SidePanelViewControlle
         refresh = UIRefreshControl()
         refresh.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
         self.tableView.insertSubview(refresh, atIndex: 0)
+        let logo = UIImage(named: "home")
+        let imageView = UIImageView(image:logo)
+        self.navigationItem.titleView = imageView
         
         self.navigationController?.navigationBar.barTintColor = TwitterColor().twitterBlue
         
@@ -114,6 +115,16 @@ class TimeLineTableViewController: UITableViewController, SidePanelViewControlle
             var favoriteOn = UIImage(named: "favorite_on")
             cell.favoriteButton.setImage(favoriteOn, forState: .Normal)
         }
+        if tweet?.retweeted == true {
+            var favoriteOn = UIImage(named: "retweet_on")
+            cell.retweetButton.setImage(favoriteOn, forState: .Normal)
+        }
+        
+        var tapRec = UITapGestureRecognizer()
+        cell.profileImage.tag = indexPath.row
+        tapRec.addTarget(self, action: "imageTapped:")
+        cell.profileImage.addGestureRecognizer(tapRec)
+        
         
         
         return cell
@@ -140,15 +151,6 @@ class TimeLineTableViewController: UITableViewController, SidePanelViewControlle
         return 200
     }
     
-    
-//    @IBAction func onLogout(sender: AnyObject) {
-//        User.currentUser?.logout()
-//    }
-//    
-//    @IBAction func newPressed(sender: AnyObject) {
-//        self.performSegueWithIdentifier("composeSegue", sender: self)
-//
-//    }
     func onLogout() {
         User.currentUser?.logout()
     }
@@ -157,15 +159,49 @@ class TimeLineTableViewController: UITableViewController, SidePanelViewControlle
         self.performSegueWithIdentifier("composeSegue", sender: self)
     }
     
-    func menuItemSelected(menuItem: AnyObject) {
+    func menuItemSelected(menuItem: MenuItem) {
         
-//        imageView.image = animal.image
-//        titleLabel.text = animal.title
-//        creatorLabel.text = animal.creator
+        let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        switch menuItem.title  {
+            case "Profile":
+                let controller = storyboard.instantiateViewControllerWithIdentifier("ProfileViewController") as ProfileViewController
+                controller.user = User.currentUser
+                self.navigationController?.pushViewController(controller, animated: true)
+            case "Home":
+                let controller = storyboard.instantiateViewControllerWithIdentifier("TimeLineTableViewController") as TimeLineTableViewController
+                self.navigationController?.pushViewController(controller, animated: true)
+            case "Mentions":
+                TwitterClient.sharedInstance.mentionsTimelineWithParams(nil, completion: { (statuses, error) -> () in
+                    let controller = storyboard.instantiateViewControllerWithIdentifier("MentionsViewController") as MentionsViewController
+                        controller.statuses = statuses
+                    self.navigationController?.pushViewController(controller, animated: true)
+                })
+                
+                println("mentions")
+            default:
+                println("none")
+        }
         
         delegate?.collapseSidePanels?()
     }
     
-    
+    func imageTapped(sender: UITapGestureRecognizer){
+        let tag = sender.view?.tag as Int!
+        var tweet = self.statuses?[tag]
+        var screenname = tweet?.user.screenname as String!
+        var reqParams = ["screen_name":screenname] as NSDictionary
+        println(screenname)
+//        var reqParams = ["screen_name":screenname as NSString
+//] as NSDictionary
+        TwitterClient.sharedInstance.userLookupWithParams(reqParams, completion: { (user, error) -> () in
+            let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+            let upvc = storyboard.instantiateViewControllerWithIdentifier("ProfileViewController") as ProfileViewController
+            upvc.user = user!
+            self.navigationController?.pushViewController(upvc, animated: true)
+            println(user)
+//            self.navigationController?.pushViewController(upvc, animated: true)
+        })
+    }
+        
 
 }

@@ -73,7 +73,7 @@ class ContainerViewController: UIViewController, TimeLineTableViewControllerDele
     func addLeftPanelViewController() {
         if (leftViewController == nil) {
             leftViewController = UIStoryboard.leftViewController()
-            leftViewController!.menuItems = ["yo"]
+            leftViewController!.menuItems = [MenuItem(title: "Home", image: UIImage(named: "home")), MenuItem(title: "Profile", image: UIImage(named: "profile")), MenuItem(title: "Mentions", image: UIImage(named: "mentions"))]
             
             addChildSidePanelController(leftViewController!)
         }

@@ -15,6 +15,7 @@ let twitterBaseURL = NSURL(string: "https://api.twitter.com")
 class TwitterClient: BDBOAuth1RequestOperationManager {
     
     var loginCompletion: ((user: User?, error: NSError?) -> ())?
+//    var statuses: Array<Status>!
     
     class var sharedInstance: TwitterClient {
         struct Static {
@@ -25,7 +26,8 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
     
     func homeTimelineWithParams(params: NSDictionary?, completion: (statuses: [Status]?, error: NSError?) -> ()) {
         self.GET("1.1/statuses/home_timeline.json", parameters: nil, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
-//            println(response)
+            println(response)
+            
             var statuses = Status.statusesWithArray(response as [NSDictionary])
             completion(statuses: statuses, error: nil)
             }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
@@ -34,6 +36,43 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
                 completion(statuses: nil, error: error)
         })
     }
+    
+    func userTimelineWithParams(params: NSDictionary?, completion: (statuses: [Status]?, error: NSError?) -> ()) {
+        self.GET("1.1/statuses/user_timeline.json", parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+            //            println(response)
+            var statuses = Status.statusesWithArray(response as [NSDictionary])
+            completion(statuses: statuses, error: nil)
+            }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
+                println("error getting home timeline")
+                println(error)
+                completion(statuses: nil, error: error)
+        })
+    }
+    
+    func mentionsTimelineWithParams(params: NSDictionary?, completion: (statuses: [Status]?, error: NSError?) -> ()) {
+        self.GET("1.1/statuses/mentions_timeline.json", parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+            //            println(response)
+            var statuses = Status.statusesWithArray(response as [NSDictionary])
+            completion(statuses: statuses, error: nil)
+            }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
+                println("error getting home timeline")
+                println(error)
+                completion(statuses: nil, error: error)
+        })
+    }
+    
+    func userLookupWithParams(params: NSDictionary?, completion: (user: User?, error: NSError?) -> ()) {
+        self.GET("1.1/users/lookup.json", parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+//                        println(response)
+            var user = User(dictionary: response[0] as NSDictionary)
+            completion(user: user, error: nil)
+            }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
+                println("error getting home timeline")
+                println(error)
+//                completion(statuses: nil, error: error)
+        })
+    }
+    
     
     func postStatusUpdateWithParams(params: NSDictionary?, completion: (status: Status?, error: NSError?) -> ()) {
         self.POST("1.1/statuses/update.json", parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
@@ -54,6 +93,8 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
                 completion(status: nil, error: error)
         }
     }
+    
+    
     
     func postDeleteFavoriteWithParams(params: NSDictionary?, completion: (status: Status?, error: NSError?) -> ()) {
         self.POST("1.1/favorites/destroy.json", parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
@@ -80,14 +121,17 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
         }
     }
     
+    
+    
     func openURL(url: NSURL) {
         self.fetchAccessTokenWithPath("oauth/access_token", method: "POST", requestToken: BDBOAuth1Credential(queryString: url.query), success: { (accessToken: BDBOAuth1Credential!) -> Void in
             println("Got the access token!")
             TwitterClient.sharedInstance.requestSerializer.saveAccessToken(accessToken)
             TwitterClient.sharedInstance.GET("1.1/account/verify_credentials.json", parameters: nil, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+                println(response)
                 var user = User(dictionary: response as NSDictionary)
                 User.currentUser = user
-                println("user: \(user.name)")
+                
                 self.loginCompletion?(user: user, error: nil)
                 }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
                     println("error getting current user")

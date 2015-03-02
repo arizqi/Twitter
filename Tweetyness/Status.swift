@@ -19,6 +19,7 @@ class Status: NSObject {
     var mediaUrl: NSURL!
     var entities: NSDictionary!
     var favorited: Bool!
+    var retweeted: Bool!
     var id: Int
     
     init(dictionary: NSDictionary) {
@@ -33,6 +34,14 @@ class Status: NSObject {
         self.numberOfFavorites = dictionary["favorite_count"] as Int
         self.entities = dictionary["entities"] as NSDictionary
         var fav = dictionary["favorited"] as Int
+        var retweet = dictionary["retweeted"] as Int
+        
+        if retweet == 1{
+            self.retweeted = true
+        }
+        else {
+            self.retweeted = false
+        }
         if fav == 1 {
             self.favorited = true
         }

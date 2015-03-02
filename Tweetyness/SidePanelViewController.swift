@@ -9,11 +9,14 @@
 import UIKit
 
 protocol SidePanelViewControllerDelegate {
-    func menuItemSelected(menuItem: AnyObject)
+    func menuItemSelected(menuItem: MenuItem)
 }
 
 class SidePanelViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
+    @IBOutlet weak var profileImage: UIImageView!
+    @IBOutlet weak var usernameLabel: UILabel!
+    @IBOutlet weak var handleLabel: UILabel!
     
     @IBOutlet weak var tableView: UITableView!
     var delegate: SidePanelViewControllerDelegate?
@@ -28,24 +31,33 @@ class SidePanelViewController: UIViewController, UITableViewDataSource, UITableV
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        println("side menu did load")
+        self.profileImage.layer.cornerRadius = 9.0
+        self.profileImage.layer.masksToBounds = true
+        self.profileImage.setImageWithURL(User.currentUser?.profileImageUrl)
         
-        tableView.reloadData()
+        self.usernameLabel.text = User.currentUser?.name
+        self.handleLabel.text = "@\(User.currentUser?.screenname as String!)"
+        
+        self.tableView.reloadData()
     }
     
     // MARK: Table View Data Source
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        println("returning number of sections")
         return 1
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        println("count of menuitems is \(menuItems.count)")
         return menuItems.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(TableView.CellIdentifiers.MenuItemCell, forIndexPath: indexPath) as MenuItemCell
-        
-        cell.configureForMenuItem(menuItems[indexPath.row])
+        println(menuItems)
+        cell.configureForMenuItem(menuItems[indexPath.row] as MenuItem)
         return cell
     }
     
@@ -53,15 +65,8 @@ class SidePanelViewController: UIViewController, UITableViewDataSource, UITableV
     
     func tableView(tableView: UITableView!, didSelectRowAtIndexPath indexPath: NSIndexPath!) {
         let selectedMenuItem = menuItems[indexPath.row]
-        delegate?.menuItemSelected(selectedMenuItem)
+        delegate?.menuItemSelected(selectedMenuItem as MenuItem)
     }
     
 }
 
-class MenuItemCell: UITableViewCell {
-    
-    @IBOutlet weak var menuItemLabel: UILabel!
-    func configureForMenuItem(menuItem: AnyObject) {
-        menuItemLabel.text = "yoyo"
-    }
-}

@@ -18,6 +18,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
+        var navigationBarAppearace = UINavigationBar.appearance()
+        
+        navigationBarAppearace.tintColor = UIColor.whiteColor() // White color
+        navigationBarAppearace.barTintColor = UIColor.whiteColor() // Green shade
+        
+        // change navigation item title color
+        navigationBarAppearace.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
+        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "userDidLogout", name: userDidLogoutNotification, object: nil)
         
         if User.currentUser != nil {
@@ -28,17 +36,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             window!.rootViewController = containerViewController
             window!.makeKeyAndVisible()
-//            println("Current user detected")
-//            var vc = storyboard.instantiateViewControllerWithIdentifier("TimeLineNavigationController") as UIViewController
-//            window?.rootViewController = vc
+//
         }
-        window = UIWindow(frame: UIScreen.mainScreen().bounds)
-        
-        let containerViewController = ContainerViewController()
-        
-        window!.rootViewController = containerViewController
-        window!.makeKeyAndVisible()
-        
         return true
     }
     

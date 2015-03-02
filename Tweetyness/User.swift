@@ -20,6 +20,12 @@ class User: NSObject {
     var profileImageUrl: NSURL
     var tagline: String
     var dictionary: NSDictionary
+    var favoriteCount: Int!
+    var tweetCount: Int!
+    var followingCount: Int!
+    var followersCount: Int!
+    var profileBackgroundImageUrl: NSURL
+//    var statuses: [Status]?
     
     init(dictionary: NSDictionary) {
         self.dictionary = dictionary
@@ -28,7 +34,13 @@ class User: NSObject {
         self.screenname = dictionary["screen_name"] as String
         self.profileImageUrl = NSURL(string: (dictionary["profile_image_url"] as String).stringByReplacingOccurrencesOfString("_normal", withString: "_bigger", options: nil, range: nil))!
         self.tagline = dictionary["description"] as String
-    }
+        self.favoriteCount = dictionary["favourites_count"] as Int
+        self.tweetCount = dictionary["statuses_count"] as Int
+        self.followersCount = dictionary["followers_count"] as Int
+        self.followingCount = dictionary["friends_count"] as Int
+        self.profileBackgroundImageUrl =  NSURL(string: (dictionary["profile_background_image_url"] as String).stringByReplacingOccurrencesOfString("_normal", withString: "_bigger", options: nil, range: nil))!
+//        self.statuses = dictionary["statuses"] as [Status]
+     }
     
     func logout() {
         println("onlogout pressed")
